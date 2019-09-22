@@ -5,8 +5,7 @@ This is a plugin that creates subscriptions to an OPC UA server and feeds them i
 
 Tested against DeltaV 14.3 FP1 OPC UA server.
 
-
 Work to do:
-* Move to asynchronous OPC UA from FreeOPCUA
+* Move to asynchronous OPC UA from FreeOPCUA (https://github.com/FreeOpcUa/opcua-asyncio)
 * Enable username/password support
 * Enable certificate support

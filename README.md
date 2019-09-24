@@ -1,5 +1,5 @@
 # foglamp-south-opcua_py
-OPC UA Plugin for Foglamp based on the FreeOPCUA (Python).
+OPC UA Plugin for Foglamp based on the FreeOPCUA (Python) library.
 
 This is a plugin that creates subscriptions to an OPC UA server and plublishes data into the Foglamp (https://dianomic.com/platform/foglamp/) platform.
 

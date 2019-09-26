@@ -57,18 +57,32 @@ _DEFAULT_CONFIG = {
         'order': '2',
         'displayName': 'Certificate Name'
     },
+    'userName': {
+        'description': 'User name, if needed (leave blank if unused)',
+        'type': 'string',
+        'default': '',
+        'order': '3',
+        'displayName': 'User Name'
+    },
+    'password': {
+        'description': 'Password (leave blank if unused)',
+        'type': 'string',
+        'default': '',
+        'order': '4',
+        'displayName': 'Password'
+    },
     'assetNamePrefix': {
         'description': 'Asset name prefix',
         'type': 'string',
         'default': 'opcua-',
-        'order': '3',
+        'order': '5',
         'displayName': 'Asset Name Prefix'
     },
     'subscriptions': {
         'description': 'JSON list of nodes to subscribe to',
         'type': 'JSON',
-        'order': '4',
-        'displayName': 'OPC UA Nodes to monitor',
+        'order': '6',
+        'displayName': 'OPC UA Nodes to monitor through subscriptions',
         'default' : '{ "subscriptions" : [ "ns=2;s=0:FIT-321.CV", "ns=2;s=0:TE200-07/AI1/OUT.CV", "ns=2;s=0:TE200-12/AI1/OUT.CV" ] }'
     }
 }
@@ -130,11 +144,21 @@ def plugin_start(handle):
     _LOGGER.info("opcua_py plugin_start called")
 
     url = handle['url']['value']
+    userName = handle['userName']['value']
+    password = handle['password']['value']
+
     _LOGGER.info('opcua_py: Attempting to connect to %s', url)
 
-    client = Client(url=url) 
+    client = Client(url=url)
 
-    _LOGGER.info('opcua_py: Connecting the client.') 
+    if userName:
+        _LOGGER.info('opcua_py: Attempting to connect to OPC UA server with username and password.')
+        _LOGGER.info('Username is %s with length %d', userName, len(userName))
+        client.set_user(userName)
+        client.set_password(password)
+    else:
+        _LOGGER.info('opcua_py: Attempting to connect with anonymously to OPC UA server.')
+
     client.connect()
 
     #Need to add some error checking on the connection

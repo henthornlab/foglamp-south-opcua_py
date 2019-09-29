@@ -51,37 +51,44 @@ _DEFAULT_CONFIG = {
         'displayName': 'Host'
     },
     'certificateName': {
-        'description': 'Certificate file name, if needed (NOT CURRENTLY IMPLEMENTED)',
+        'description': 'Client certificate file name, if needed (leave blank if unused)',
         'type': 'string',
-        'default': 'foglamp',
+        'default': '',
         'order': '2',
         'displayName': 'Certificate Name'
     },
-    'userName': {
-        'description': 'User name, if needed (leave blank if unused)',
+    'keyName': {
+        'description': 'Client private key file name, if needed (leave blank if unused)',
         'type': 'string',
         'default': '',
         'order': '3',
-        'displayName': 'User Name'
+        'displayName': 'Key Name'
     },
-    'password': {
-        'description': 'Password (leave blank if unused)',
+    'serverCertName': {
+        'description': 'Server certificate file name, if needed (leave blank if unused)',
         'type': 'string',
         'default': '',
         'order': '4',
-        'displayName': 'Password'
+        'displayName': 'Key Name'
     },
-    'assetNamePrefix': {
-        'description': 'Asset name prefix',
+    'userName': {
+        'description': 'User name, if needed (leave blank if logging in anonymously)',
         'type': 'string',
-        'default': 'opcua-',
+        'default': '',
         'order': '5',
-        'displayName': 'Asset Name Prefix'
+        'displayName': 'User Name'
+    },
+    'password': {
+        'description': 'Password (leave blank if logging in anonymously)',
+        'type': 'string',
+        'default': '',
+        'order': '6',
+        'displayName': 'Password'
     },
     'subscriptions': {
         'description': 'JSON list of nodes to subscribe to',
         'type': 'JSON',
-        'order': '6',
+        'order': '7',
         'displayName': 'OPC UA Nodes to monitor through subscriptions',
         'default' : '{ "subscriptions" : [ "ns=2;s=0:FIT-321.CV", "ns=2;s=0:TE200-07/AI1/OUT.CV", "ns=2;s=0:TE200-12/AI1/OUT.CV" ] }'
     }
@@ -126,7 +133,7 @@ def plugin_reconfigure(handle, new_config):
     Returns:
         new_handle: new handle to be used in the future calls
     """
-    _LOGGER.info("opcua_py: Old config for {} {} \n new config {}".format(_PLUGIN_NAME, handle, new_config))
+    _LOGGER.info("opcua_py: Old config for {} \n new config {}".format( handle, new_config))
 
     # plugin_shutdown
     plugin_shutdown(handle)
@@ -146,8 +153,9 @@ def plugin_start(handle):
     url = handle['url']['value']
     userName = handle['userName']['value']
     password = handle['password']['value']
-
-    _LOGGER.info('opcua_py: Attempting to connect to %s', url)
+    certificateName = handle['certificateName']['value']
+    keyName = handle['keyName']['value']
+    serverCertName = handle['serverCertName']['value']
 
     client = Client(url=url)
 
@@ -159,6 +167,10 @@ def plugin_start(handle):
     else:
         _LOGGER.info('opcua_py: Attempting to connect with anonymously to OPC UA server.')
 
+    if certificateName:
+        _LOGGER.info('opcua_py: Attempting to look in directory %s for certificates', _FOGLAMP_DATA)
+        _LOGGER.info('opcua_py: Attempting to connect to load client certificate file %s.', certificateName)
+        
     client.connect()
 
     #Need to add some error checking on the connection
@@ -214,7 +226,7 @@ def plugin_shutdown(handle):
     client.disconnect()
 
     _plugin_stop(handle)
-    _LOGGER.info('{} has shut down.'.format(_PLUGIN_NAME))
+    _LOGGER.info('opcua_py plugin has shut down.')
 
 
 def plugin_register_ingest(handle, callback, ingest_ref):
@@ -262,7 +274,3 @@ class SubscriptionHandler:
         } 
 
         async_ingest.ingest_callback(c_callback, c_ingest_ref, data)
-
-
-
-

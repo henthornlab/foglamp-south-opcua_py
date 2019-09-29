@@ -6,6 +6,7 @@ This is a plugin that creates subscriptions to an OPC UA server and plublishes d
 Tested against:
 1. DeltaV 14.3 FP1 OPC UA server (anonymous)
 2. Kepserver 6.5 (anonymous and username/password)
+3. Open62541 test server
 
 
 Work to do:

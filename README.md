@@ -10,4 +10,4 @@ Tested against:
 
 Work to do:
 * Move to asynchronous OPC UA from FreeOPCUA (https://github.com/FreeOpcUa/opcua-asyncio)
-* Enable certificate support
+* Enable certificate support (in progress in this branch)

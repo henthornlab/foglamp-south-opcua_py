@@ -157,7 +157,7 @@ def plugin_start(handle):
         client.set_user(userName)
         client.set_password(password)
     else:
-        _LOGGER.info('opcua_py: Attempting to connect with anonymously to OPC UA server.')
+        _LOGGER.info('opcua_py: Attempting to connect anonymously to OPC UA server.')
 
     client.connect()
 

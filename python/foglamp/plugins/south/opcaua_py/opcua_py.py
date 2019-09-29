@@ -62,17 +62,10 @@ _DEFAULT_CONFIG = {
         'order': '3',
         'displayName': 'Password'
     },
-    'assetNamePrefix': {
-        'description': 'Asset name prefix',
-        'type': 'string',
-        'default': 'opcua-',
-        'order': '4',
-        'displayName': 'Asset Name Prefix'
-    },
     'subscriptions': {
         'description': 'JSON list of nodes to subscribe to',
         'type': 'JSON',
-        'order': '5',
+        'order': '4',
         'displayName': 'OPC UA Nodes to monitor through subscriptions',
         'default' : '{ "subscriptions" : [ "ns=2;s=0:FIT-321.CV", "ns=2;s=0:TE200-07/AI1/OUT.CV", "ns=2;s=0:TE200-12/AI1/OUT.CV" ] }'
     }

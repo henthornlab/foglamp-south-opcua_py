@@ -31,8 +31,6 @@ c_callback = None
 c_ingest_ref = None
 loop = None
 t = None
-_FOGLAMP_DATA = os.getenv("FOGLAMP_DATA", default=None)
-_FOGLAMP_ROOT = os.getenv("FOGLAMP_ROOT", default='/usr/local/foglamp')
 
 _CONFIG_CATEGORY_NAME = 'OPCUA_PY'
 _CONFIG_CATEGORY_DESCRIPTION = 'South Plugin OPC UA in Python'
@@ -50,38 +48,31 @@ _DEFAULT_CONFIG = {
         'order': '1',
         'displayName': 'Host'
     },
-    'certificateName': {
-        'description': 'Certificate file name, if needed (NOT CURRENTLY IMPLEMENTED)',
-        'type': 'string',
-        'default': 'foglamp',
-        'order': '2',
-        'displayName': 'Certificate Name'
-    },
     'userName': {
         'description': 'User name, if needed (leave blank if unused)',
         'type': 'string',
         'default': '',
-        'order': '3',
+        'order': '2',
         'displayName': 'User Name'
     },
     'password': {
         'description': 'Password (leave blank if unused)',
         'type': 'string',
         'default': '',
-        'order': '4',
+        'order': '3',
         'displayName': 'Password'
     },
     'assetNamePrefix': {
         'description': 'Asset name prefix',
         'type': 'string',
         'default': 'opcua-',
-        'order': '5',
+        'order': '4',
         'displayName': 'Asset Name Prefix'
     },
     'subscriptions': {
         'description': 'JSON list of nodes to subscribe to',
         'type': 'JSON',
-        'order': '6',
+        'order': '5',
         'displayName': 'OPC UA Nodes to monitor through subscriptions',
         'default' : '{ "subscriptions" : [ "ns=2;s=0:FIT-321.CV", "ns=2;s=0:TE200-07/AI1/OUT.CV", "ns=2;s=0:TE200-12/AI1/OUT.CV" ] }'
     }
@@ -126,7 +117,7 @@ def plugin_reconfigure(handle, new_config):
     Returns:
         new_handle: new handle to be used in the future calls
     """
-    _LOGGER.info("opcua_py: Old config for {} {} \n new config {}".format(_PLUGIN_NAME, handle, new_config))
+    _LOGGER.info("opcua_py: Old config for {} \n new config {}".format(handle, new_config))
 
     # plugin_shutdown
     plugin_shutdown(handle)
@@ -153,7 +144,6 @@ def plugin_start(handle):
 
     if userName:
         _LOGGER.info('opcua_py: Attempting to connect to OPC UA server with username and password.')
-        _LOGGER.info('Username is %s with length %d', userName, len(userName))
         client.set_user(userName)
         client.set_password(password)
     else:
@@ -197,7 +187,7 @@ def _plugin_stop(handle):
     loop.stop()
 
 def plugin_shutdown(handle):
-    """ Shutdowns the plugin doing required cleanup, to be called prior to the South plugin service being shut down.
+    """ Shuts down the plugin doing required cleanup, to be called prior to the South plugin service being shut down.
 
     Args:
         handle: handle returned by the plugin initialisation call
@@ -214,7 +204,7 @@ def plugin_shutdown(handle):
     client.disconnect()
 
     _plugin_stop(handle)
-    _LOGGER.info('{} has shut down.'.format(_PLUGIN_NAME))
+    _LOGGER.info('opcua_py has shut down.')
 
 
 def plugin_register_ingest(handle, callback, ingest_ref):
@@ -247,6 +237,7 @@ class SubscriptionHandler:
         if ns_start != -1:
              asset_name = asset_name[ns_start:]
 
+        #Some OPC UA servers add extra parentheses, so remove them
         #Remove any extraneous parentheses
         asset_name = asset_name.replace("(","")
         asset_name = asset_name.replace(")","")
@@ -262,7 +253,3 @@ class SubscriptionHandler:
         } 
 
         async_ingest.ingest_callback(c_callback, c_ingest_ref, data)
-
-
-
-

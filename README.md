@@ -14,7 +14,7 @@ Tested against:
 3. Using the client, log into the server and note the required security level. Plugin currently supports anonymous logins and ones with username/password. Certificate authentication not currently implemented.
 4. Browse through the namespace and find the tags to monitor. Record their names, which should include the namespace (ns=). Examples include ns=2;s=0:FIT-321.CV or ns=1;i=1234.
 5. In FogLamp, create a new south opcua_py service and enter information noted above. This will create subscriptions to these tags.
-6. Optional: Use an asset filter to rename the OPC UA tags to more readable values, if desired. Example:
+6. Optional: Use an asset filter (https://github.com/foglamp/foglamp-filter-asset) to rename the OPC UA tags to more readable values, if desired. Example:
 {"asset_name": "ns=2;s=0:FIT-321.CV", "action": "rename", "new_asset_name": "FIT-321"}
 
 Work to do:

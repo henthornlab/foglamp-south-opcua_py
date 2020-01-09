@@ -5,8 +5,9 @@ This is a plugin that creates subscriptions to an OPC UA server and plublishes d
 
 Tested against:
 1. DeltaV 14.3 FP1 OPC UA server (anonymous and username/password)
-2. Kepserver 6.5 (anonymous and username/password)
-3. Open62541 test server (anonymous)
+2. DeltaV 14.3.1 OPC UA server (anonymous and username/password)
+3. Kepserver 6.5 (anonymous and username/password)
+4. Open62541 test server (anonymous)
 
 # Usage
 1. Download an OPC UA client such as Prosys (https://www.prosysopc.com/products/opc-ua-browser/) or UaExpert (https://www.unified-automation.com/products/development-tools/uaexpert.html) 
